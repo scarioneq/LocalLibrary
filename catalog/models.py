@@ -28,6 +28,8 @@ class Genre(models.Model):
                 violation_error_message = "Жанр уже существует (без учета регистра)"
             ),
         ]
+        verbose_name="Жанр"
+        verbose_name_plural="Жанры"
 
 class Language(models.Model):
     name = models.CharField(max_length=200,
@@ -48,6 +50,8 @@ class Language(models.Model):
                 violation_error_message = "Язык уже существует (без учета регистра)"
             ),
         ]
+        verbose_name = "Язык"
+        verbose_name_plural = "Языки"
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
@@ -138,6 +142,8 @@ class Author(models.Model):
 
     class Meta:
         ordering = ["last_name", "first_name"]
+        verbose_name = "Автор"
+        verbose_name_plural = "Авторы"
 
     def get_absolute_url(self):
         return reverse('author-detail', args=[str(self.id)])
