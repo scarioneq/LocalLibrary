@@ -6,6 +6,8 @@ from django.conf import settings
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
+
 
 class Genre(models.Model):
     name = models.CharField(
