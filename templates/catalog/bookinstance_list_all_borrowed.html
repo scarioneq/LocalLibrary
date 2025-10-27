@@ -1,0 +1,25 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Все выданные книги</h1>
+
+  {% if bookinstance_list %}
+    <ul>
+      {% for bookinst in bookinstance_list %}
+        <li class="{% if bookinst.is_overdue %}text-danger{% endif %}">
+          <a href="{% url 'book-detail' bookinst.book.pk %}">{{ bookinst.book.title }}</a>
+          ({{ bookinst.due_back }}) 
+          - <strong>Заемщик:</strong> 
+          {% if bookinst.borrower %}
+            {{ bookinst.borrower.get_username }}
+          {% else %}
+            Не указан
+          {% endif %}
+          - <strong>ID экземпляра:</strong> {{ bookinst.id }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Нет выданных книг.</p>
+  {% endif %}
+{% endblock %}
