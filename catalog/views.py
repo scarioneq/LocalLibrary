@@ -4,7 +4,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from .models import Book, BookInstance, Genre
 from django.contrib.auth.decorators import permission_required
-
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -57,7 +56,6 @@ class LoanedBooksByUserListView(LoginRequiredMixin,generic.ListView):
     def get_queryset(self):
         return BookInstance.objects.filter(borrower=self.request.user).filter(status__exact='o').order_by('due_back')
 
-
 class AllBorrowedBooksListView(PermissionRequiredMixin, generic.ListView):
     model = BookInstance
     template_name = 'catalog/bookinstance_list_all_borrowed.html'
@@ -66,9 +64,6 @@ class AllBorrowedBooksListView(PermissionRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return BookInstance.objects.filter(status__exact='o').order_by('due_back')
-
-
-
 
 @permission_required('catalog.can_mark_returned', raise_exception=True)
 def renew_book_librarian(request, pk):
@@ -95,10 +90,11 @@ def renew_book_librarian(request, pk):
 
     return render(request, 'catalog/book_renew_librarian.html', context)
 
-class AuthorCreate(CreateView):
+class AuthorCreate(PermissionRequiredMixin, CreateView):
     model = Author
     fields = '__all__'
-    initial={'date_of_death':'12/10/2016',}
+    initial = {'date_of_death': '12/10/2016'}
+    permission_required = 'catalog.add_author'
 
 class AuthorUpdate(UpdateView):
     model = Author

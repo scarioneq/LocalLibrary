@@ -8,7 +8,6 @@ from django.db.models.functions import Lower
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
-
 class Genre(models.Model):
     name = models.CharField(
         max_length=200,
@@ -84,7 +83,6 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
-
 
 class BookInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4,
