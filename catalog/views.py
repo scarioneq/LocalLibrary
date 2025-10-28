@@ -114,10 +114,6 @@ class BookCreate(PermissionRequiredMixin, CreateView):
     fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language']
     permission_required = 'catalog.can_mark_returned'
 
-    def get_initial(self):
-        initial = super().get_initial()
-        return initial
-
 
 class BookUpdate(PermissionRequiredMixin, UpdateView):
     model = Book
