@@ -1,23 +1,51 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Title: {{ book.title }}</h1>
+<h1>Название: {{ book.title }}</h1>
 
-  <p><strong>Author:</strong> <a href="">{{ book.author }}</a></p> 
-  <p><strong>Summary:</strong> {{ book.summary }}</p>
-  <p><strong>ISBN:</strong> {{ book.isbn }}</p>
-  <p><strong>Language:</strong> {{ book.language }}</p>
-  <p><strong>Genre:</strong> {% for genre in book.genre.all %} {{ genre }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+<p><strong>Автор:</strong> <a href="{% url 'author-detail' book.author.pk %}">{{ book.author }}</a></p>
+<p><strong>Описание:</strong> {{ book.summary }}</p>
+<p><strong>ISBN:</strong> {{ book.isbn }}</p>
+<p><strong>Язык:</strong> {{ book.language }}</p>
+<p><strong>Жанр:</strong> {{ book.display_genre }}</p>
 
-  <div style="margin-left:20px;margin-top:20px">
-    <h4>Copies</h4>
-
+<div style="margin-left:20px;margin-top:20px">
+    <h4>Экземпляры</h4>
     {% for copy in book.bookinstance_set.all %}
     <hr>
-    <p class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'd' %}text-danger{% else %}text-warning{% endif %}">{{ copy.get_status_display }}</p>
-    {% if copy.status != 'a' %}<p><strong>Due to be returned:</strong> {{copy.due_back}}</p>{% endif %}
-    <p><strong>Imprint:</strong> {{copy.imprint}}</p>
-    <p class="text-muted"><strong>Id:</strong> {{copy.id}}</p>
+    <p class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'd' %}text-danger{% else %}text-warning{% endif %}">
+        {{ copy.get_status_display }}
+    </p>
+    {% if copy.status != 'a' %}
+    <p><strong>Дата возврата:</strong> {{ copy.due_back }}</p>
+    {% endif %}
+    <p><strong>Издательство:</strong> {{ copy.imprint }}</p>
+    <p class="text-muted"><strong>Id:</strong> {{ copy.id }}</p>
     {% endfor %}
-  </div>
+</div>
+
+{% if perms.catalog.can_mark_returned %}
+<div style="margin-left:20px;margin-top:20px">
+    <h4>Действия</h4>
+    <a href="{% url 'book-update' book.pk %}" class="btn btn-primary">Редактировать книгу</a>
+    <a href="{% url 'book-delete' book.pk %}" class="btn btn-danger">Удалить книгу</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block sidebar %}
+{{ block.super }}
+
+{% if perms.catalog.change_book or perms.catalog.delete_book %}
+<hr>
+<ul class="sidebar-nav">
+    {% if perms.catalog.change_book %}
+    <li><a href="{% url 'book-update' book.id %}">Редактировать книгу</a></li>
+    {% endif %}
+    {% if perms.catalog.delete_book %}
+    <li><a href="{% url 'book-delete' book.id %}">Удалить книгу</a></li>
+    {% endif %}
+</ul>
+{% endif %}
+
 {% endblock %}

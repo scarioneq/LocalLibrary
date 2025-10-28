@@ -8,14 +8,18 @@
       {% for bookinst in bookinstance_list %}
         <li class="{% if bookinst.is_overdue %}text-danger{% endif %}">
           <a href="{% url 'book-detail' bookinst.book.pk %}">{{ bookinst.book.title }}</a>
-          ({{ bookinst.due_back }})
-          - <strong>Заемщик:</strong>
+          (Возврат: {{ bookinst.due_back }}) 
+          - <strong>Заемщик:</strong> 
           {% if bookinst.borrower %}
             {{ bookinst.borrower.get_username }}
           {% else %}
             Не указан
           {% endif %}
           - <strong>ID экземпляра:</strong> {{ bookinst.id }}
+          
+          {% if perms.catalog.can_mark_returned %}
+            - <a href="{% url 'renew-book-librarian' bookinst.id %}" class="btn btn-primary btn-sm">Продлить</a>
+          {% endif %}
         </li>
       {% endfor %}
     </ul>

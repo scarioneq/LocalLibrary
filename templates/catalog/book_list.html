@@ -1,19 +1,26 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h1>Book List</h1>
+<h1>Список книг</h1>
 
-    {% if book_list %}
-    <ul>
+{% if perms.catalog.can_mark_returned %}
+<a href="{% url 'book-create' %}" class="btn btn-success" style="margin-bottom: 20px;">Добавить новую книгу</a>
+{% endif %}
 
-      {% for book in book_list %}
-      <li>
-        <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{book.author}})
-      </li>
-      {% endfor %}
-
-    </ul>
-    {% else %}
-      <p>There are no books in the library.</p>
-    {% endif %}
+{% if book_list %}
+<ul>
+    {% for book in book_list %}
+    <li>
+        <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> 
+        ({{ book.author }})
+        {% if perms.catalog.can_mark_returned %}
+        - <a href="{% url 'book-update' book.pk %}" class="btn btn-primary btn-sm">Редактировать</a>
+        - <a href="{% url 'book-delete' book.pk %}" class="btn btn-danger btn-sm">Удалить</a>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>В библиотеке нет книг.</p>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Удалить книгу</h1>
+
+<p>Вы уверены, что хотите удалить книгу: <strong>{{ book }}</strong>?</p>
+
+{% if book_instances %}
+<div class="alert alert-warning">
+    <h4>Внимание!</h4>
+    <p>Эта книга имеет связанные экземпляры:</p>
+    <ul>
+        {% for instance in book_instances %}
+        <li>ID экземпляра: {{ instance.id }} (Статус: {{ instance.get_status_display }})</li>
+        {% endfor %}
+    </ul>
+    <p>Удаление книги также удалит все связанные экземпляры!</p>
+</div>
+{% endif %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Да, удалить" class="btn btn-danger" />
+    <a href="{% url 'book-detail' book.pk %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}
